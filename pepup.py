@@ -70,7 +70,7 @@ def lambda_handler(event,context):
         ToDailyInput.click()
 
         #time.sleep(5) # 読み込みを待つために５秒間処理を止める
-
+        '''
         #日々の入力項目の入力
         driver.find_element_by_xpath('//*[@id="app"]/div/div/div[2]/div/div[2]/div/div[4]/div[2]/div[1]/label').click()
         driver.find_element_by_xpath('//*[@id="app"]/div/div/div[2]/div/div[2]/div/div[4]/div[2]/div[2]/label').click()
@@ -82,8 +82,12 @@ def lambda_handler(event,context):
         driver.find_element_by_xpath('//*[@id="app"]/div/div/div[2]/div/div[2]/div/div[4]/div[2]/div[8]/label').click()
         driver.find_element_by_xpath('//*[@id="app"]/div/div/div[2]/div/div[2]/div/div[4]/div[2]/div[9]/label').click()
         driver.find_element_by_xpath('//*[@id="app"]/div/div/div[2]/div/div[2]/div/div[4]/div[2]/div[10]/label').click()
+        '''
+        tmp = driver.find_elements_by_xpath('//*[@id="app"]/div/div/div[2]/div/div[2]/div/div[4]/div[2]/div[*]/label')
+        for ch in tmp:
+            ch.click()
 
-        time.sleep(10)
+        time.sleep(5)
 
         FILENAME = 'result' + str(TODAY) + '.png'
         # スクリーンショットを撮る。
