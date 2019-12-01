@@ -83,7 +83,8 @@ def lambda_handler(event,context):
         driver.find_element_by_xpath('//*[@id="app"]/div/div/div[2]/div/div[2]/div/div[4]/div[2]/div[9]/label').click()
         driver.find_element_by_xpath('//*[@id="app"]/div/div/div[2]/div/div[2]/div/div[4]/div[2]/div[10]/label').click()
         '''
-        tmp = driver.find_elements_by_xpath('//*[@id="app"]/div/div/div[2]/div/div[2]/div/div[4]/div[2]/div[*]/label')
+        #tmp = driver.find_elements_by_xpath('//*[@id="app"]/div/div/div[2]/div/div[2]/div/div[4]/div[2]/div[*]/label')
+        tmp = driver.find_elements_by_xpath('//*[@id="app"]/div/div[2]/div/div[2]/div/div[4]/div[2]/div[*]/label/div[2]')
         for ch in tmp:
             ch.click()
 
@@ -94,7 +95,8 @@ def lambda_handler(event,context):
         driver.save_screenshot('/tmp/' + FILENAME)
         
         #睡眠時間の入力
-        driver.find_element_by_xpath('//*[@id="app"]/div/div/div[2]/div/div[2]/div/div[3]/div[2]/div[5]/div/div/div[2]/div[2]/a').click()
+        #driver.find_element_by_xpath('//*[@id="app"]/div/div/div[2]/div/div[2]/div/div[3]/div[2]/div[5]/div/div/div[2]/div[2]/a').click()
+        driver.find_element_by_xpath('//*[@id="app"]/div/div[2]/div/div[2]/div/div[3]/div[2]/div[5]/div/div/div[2]/div[2]/a').click()
         driver.find_element_by_xpath('//*[@id="open_edit_sleeping"]').click()
         driver.find_element_by_xpath('//*[@id="measurement_value"]').send_keys(SLEEPTIME)
         driver.find_element_by_xpath('//*[@id="edit_measurement_submit"]').click()
@@ -104,8 +106,8 @@ def lambda_handler(event,context):
         driver.back()
 
         #ログオフ
-        TOHOME = driver.find_element_by_xpath('//*[@id="app"]/div/div/div[1]/div/div[1]/a/img')
-        TOHOME.click()
+        #TOHOME = driver.find_element_by_xpath('//*[@id="app"]/div/div/div[1]/div/div[1]/a/img')
+        driver.back()
         LogoffMenuButton = driver.find_element_by_class_name('Header_DropdownLink') 
         LogoffMenuButton.click()
         LogoffButton = driver.find_element_by_class_name('Header_DropdownLogOutIcon') 
