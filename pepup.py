@@ -113,8 +113,8 @@ def lambda_handler(event,context):
         except Exception as e:
 
             _subject = 'PEPUP日次処理失敗のお知らせ'
-            _body = '本日のPEPUP日次処理は失敗しました。恐れ入りますが手動にて本日分の入力をお長居いたします。'
-            _body += e
-            _body += traceback.print_exc()   
+            _body = '本日のPEPUP日次処理は失敗しました。恐れ入りますが手動にて本日分の入力をお願いいたします。'
+            _body += str(e)
+            _body += str(traceback.print_exc())
             #send mail
             ses_send_email(_from, _to, _subject, _body)
