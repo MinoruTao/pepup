@@ -39,7 +39,6 @@ def ses_send_email(_from, _to, _subject, _body):
     return _response
 
 def lambda_handler(event,context):
-    try :
         options = Options()
         options.add_argument('--headless')
         options.add_argument('--disable-gpu')
@@ -57,21 +56,40 @@ def lambda_handler(event,context):
         driver = webdriver.Chrome(executable_path="./bin/chromedriver", chrome_options=options)
         
         driver.get(URL)
+
         userNameField = driver.find_element_by_id('sender-email')
         userNameField.send_keys(username) 
+
         passwordField = driver.find_element_by_id('user-pass')
         passwordField.send_keys(password)
+
         submitButton = driver.find_element_by_name('commit')
         submitButton.click()
+
         ToDailyInput = driver.find_element_by_class_name('SideMenu_MyFitnessDataIcon')
         ToDailyInput.click()
+
         #time.sleep(5) # 読み込みを待つために５秒間処理を止める
-        
+        '''
+        #日々の入力項目の入力
+        driver.find_element_by_xpath('//*[@id="app"]/div/div/div[2]/div/div[2]/div/div[4]/div[2]/div[1]/label').click()
+        driver.find_element_by_xpath('//*[@id="app"]/div/div/div[2]/div/div[2]/div/div[4]/div[2]/div[2]/label').click()
+        driver.find_element_by_xpath('//*[@id="app"]/div/div/div[2]/div/div[2]/div/div[4]/div[2]/div[3]/label').click()
+        driver.find_element_by_xpath('//*[@id="app"]/div/div/div[2]/div/div[2]/div/div[4]/div[2]/div[4]/label').click()
+        driver.find_element_by_xpath('//*[@id="app"]/div/div/div[2]/div/div[2]/div/div[4]/div[2]/div[5]/label').click()
+        driver.find_element_by_xpath('//*[@id="app"]/div/div/div[2]/div/div[2]/div/div[4]/div[2]/div[6]/label').click()
+        driver.find_element_by_xpath('//*[@id="app"]/div/div/div[2]/div/div[2]/div/div[4]/div[2]/div[7]/label').click()
+        driver.find_element_by_xpath('//*[@id="app"]/div/div/div[2]/div/div[2]/div/div[4]/div[2]/div[8]/label').click()
+        driver.find_element_by_xpath('//*[@id="app"]/div/div/div[2]/div/div[2]/div/div[4]/div[2]/div[9]/label').click()
+        driver.find_element_by_xpath('//*[@id="app"]/div/div/div[2]/div/div[2]/div/div[4]/div[2]/div[10]/label').click()
+        '''
         #tmp = driver.find_elements_by_xpath('//*[@id="app"]/div/div/div[2]/div/div[2]/div/div[4]/div[2]/div[*]/label')
         tmp = driver.find_elements_by_xpath('//*[@id="app"]/div/div[2]/div/div[2]/div/div[4]/div[2]/div[*]/label/div[2]')
         for ch in tmp:
             ch.click()
+
         time.sleep(5)
+
         FILENAME = 'result' + str(TODAY) + '.png'
         # スクリーンショットを撮る。
         driver.save_screenshot('/tmp/' + FILENAME)
@@ -86,6 +104,7 @@ def lambda_handler(event,context):
         # スクリーンショットを撮る。
         driver.save_screenshot('/tmp/' + FILENAME2)
         driver.back()
+
         #ログオフ
         #TOHOME = driver.find_element_by_xpath('//*[@id="app"]/div/div/div[1]/div/div[1]/a/img')
         driver.back()
@@ -93,7 +112,9 @@ def lambda_handler(event,context):
         LogoffMenuButton.click()
         LogoffButton = driver.find_element_by_class_name('Header_DropdownLogOutIcon') 
         LogoffButton.click()
+
         driver.quit() 
+
         #upload to s3
         s3 = boto3.resource('s3')
         backet = s3.Bucket('kinkoman13')
@@ -101,13 +122,3 @@ def lambda_handler(event,context):
         backet.upload_file('/tmp/'+FILENAME2,'pepup/'+FILENAME2)
         #send mail
         ses_send_email(_from, _to, _subject, _body)
-    
-    except Exception as e:
-        _subject = 'PEPUP日次処理失敗のお知らせ'
-        _body = '本日のPEPUP日次処理は失敗しました。恐れ入りますが手動にて本日分の入力をお願いいたします。'
-        _body += str(e)
-        _body += str(traceback.print_exc())
-        #send mail
-        ses_send_email(_from, _to, _subject, _body)
-
-
